@@ -28,21 +28,27 @@ public class UserController {
 
     @GetMapping("/addNewUser")
     public String addNewUser(ModelMap model) {
-
         model.addAttribute("messages", new User());
         return "userInfo";
     }
 
+    @PostMapping("/addNewUser")
+    public String addUser(@ModelAttribute("messages") User user) {
+        userService.add(user);
+
+        return "redirect:/user";
+    }
+
+    @PatchMapping("/user-update/{id}")
+    public String editUserInfo(@PathVariable("id") Long id, ModelMap model) {
+        User messages = userService.getUser(id);
+        model.addAttribute("messages", messages);
+        return "userInfo";
+    }
+
     @PostMapping()
-//    public String addUser(@ModelAttribute("messages") User user) {
     public String updateUser(@ModelAttribute("messages") User user) {
-
-//        if (user.getId() == null) {
-//            userService.add(user);
-//        } else {
         userService.updateUser(user);
-//        }
-
         return "redirect:/user";
     }
 
@@ -52,13 +58,5 @@ public class UserController {
         return "redirect:/user";
 
     }
-
-    @PatchMapping("/user-update/{id}")
-    public String enterNewDataUser(@PathVariable("id") Long id, ModelMap model) {
-        User messages = userService.getUser(id);
-        model.addAttribute("messages", messages);
-        return "userInfo";
-    }
-
 
 }
